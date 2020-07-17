@@ -1,0 +1,382 @@
+ROUTINE sudoku5.mac
+SUDOKU5  ; version 1.5
+     write #
+     for i=1:1:19 write $text(welcome+i),!
+     read "go:",go#1,!
+     quit:".,"[$e(go)&&$l(go)
+     
+     ; terminal controls
+new kill 
+    set tCSI  =$c(27)_"["
+        ,tNORM=tCSI_"0;30;43m"  ; black on yellow 
+        ,tBRED=tCSI_"1;31;46m"    
+        ,tREVS=tCSI_"1;7;37;44m"
+        ,tHOME=tCSI_"H"
+        ,key=0
+        ,free=123456789
+ 
+    for row=1:1:9 {
+ #; init freemap
+        set (box("R",row),box("C",row),box("G",row))=free
+        for col=1:1:9 {
+#;  no grid entry, ,0) = display position
+            set box(row,col)=" "
+                ,box(row,col,0)=tCSI_(row-1*4+2)_";"_(col-1*6+4)_"H"
+                ,grp=(row-1\3+1)+(col-1\3*3)
+ #; ,1) = group number
+                ,box(row,col,1)=grp
+ #; group index + coordinates
+                ,grp(grp)=$g(grp(grp))_$lb(col/10+row)
+            } 
+       }  
+home 
+    do show0
+    set (row,col,loop)=1
+    while loop { do input }
+    do show0 
+    if in="*" do solver goto home
+exit
+    write tCSI_"36;0H",tCSI_"m",! ;reset all          
+    quit
+#; debugging entry    
+#;step
+#;    kill
+#;    set %step=1 goto new    
+#; get 1 char or a cursor key or <CR>    
+input 
+    read in#1
+    set key=$key
+        ,int=$s(+in:in,1:" ")
+#; export grid
+    if in="x" do export goto input    
+#; import grid
+    if in="i" do import goto input    
+#; save test data    
+    if in="^" {
+        kill ^box 
+        merge ^box=box 
+        do show0 
+        goto input
+        }
+#; load test data        
+    elseif in="!" {
+        merge box=^box 
+        do show0
+        goto input
+        }
+    if $l(in) {
+ #; program stop with ,. * => solver       
+        if ".,*"[in set loop=0 quit
+ #; process input
+        if $$valid() quit
+        }
+ #; cursor navigation
+    if key=$c(13) set key=tCSI_"C" 
+    if $e(key,1,2)=tCSI {
+        set k=$e(key,3)
+        if $l(k),"ABCD"[k do @k write box(row,col,0)
+        }
+    else {
+        set old=$e(box(row,col))
+        if old'=int {
+            set box(row,col)=int
+            do valid()
+        }
+    }
+    quit  
+A   quit:$$F()
+    if row>1,$i(row,-1)
+    else  set row=9 do D
+    quit
+B   quit:$$E()
+    if row<9,$i(row) 
+    else  set row=1 do C
+    quit
+C   quit:$$E()
+    if (col=9),(row=9) set (row,col)=1 quit
+    if col<9,$i(col)
+    else  set col=1 do B
+    quit
+D   quit:$$F()
+    if col>1,$i(col,-1)
+    else  set col=9 do A
+    quit
+E() if (col=9),(row=9) set (row,col)=1
+    quit $test
+F() if (col=1),(row=1) set (row,col)=9
+    quit $test
+ 
+#; check for valid entry or forget it
+valid(quick = 0 ) 
+    set old=+box(row,col)
+        ,grp=box(row,col,1)
+    if int=" " {
+           do clear(old)
+           set box(row,col)=int
+        }
+    elseif int'=old {
+      if $$check(int) { 
+        do clear(old)
+          ,lock(int)
+        set box(row,col)=int
+        }
+    }
+    if quick quit 1
+    set cl=col,rw=row,gr=grp
+    do show
+    set col=cl,row=rw,grp=gr
+    write box(row,col,0)
+    quit 1 
+    
+#; is the value allowed in all dimensions
+check(val) 
+    if box("R",row)[val,box("C",col)[val,box("G",grp)[val
+    quit $test
+
+
+#; release old value
+clear(val) 
+    set $e(box("R",row),val)=val
+        ,$e(box("C",col),val)=val
+        ,$e(box("G",grp),val)=val
+    quit
+
+#; lock new value
+lock(val)
+    set $e(box("R",row),val)="."
+        ,$e(box("C",col),val)="."
+        ,$e(box("G",grp),val)="."
+    quit   
+
+#; show and goto (1,1)
+show0
+    do show
+    write box(1,1,0)
+    set (row,col)=1         
+    quit    
+#; simple show
+show
+    set row=0
+    write #!,tHOME,tBRED 
+    do lin
+    for row=1:1:9 {
+        for col=1:1:9 { do box0 }  write tBRED,"|",!
+        for col=1:1:9 { do box1 }  write tBRED,"|",!
+        for col=1:1:9 { do box2 }  write tBRED,"|",!
+ ;       for col=1:1:9 { do box3 }  write tBRED,"|",!
+        do lin
+    }
+    write tCSI_"m"
+    quit
+
+#; 4 lines by box    
+box0 do opt(),bx write "|",tNORM,"  ",tREVS,box(row,col),tNORM,"  " quit 
+box1 do bx write "|",tNORM,$e(free,1,5) quit   
+box2 do bx write "|",tNORM,$e(free,6,10) quit   
+bx  write:col#3=1 tBRED
+    set free=$s(box(row,col):$j("",10),1: box(row,col,2)_"*")
+    quit 
+
+#; generate available values
+opt()
+    if box(row,col) {
+        set free="........."
+        }
+    else {
+        set free=""
+            ,grp=box(row,col,1)
+        for int=1:1:9 set free=free_$s($$check(int):int,1:".")
+        }
+    set box(row,col,2)=free
+    quit free  
+    
+#;separator, header, footer     
+lin  
+    for col= 1:1:9 Write tBRED,"+",$s(row#3:tNORM,1:""),"-----"
+    write tBRED,"+",!
+    quit
+    
+#; fill automatically obvious values  by "*"
+#; if the box is empty and there is just 1 value 
+#; available then fill it in  
+solver 
+    do {
+        set find=0
+        for row=1:1:9 {
+            for col=1:1:9 {
+                if ($e(box(row,col))=" ") {
+                    set int=$tr($$opt,".")
+                    if $l(int)=1 {
+                        if $$valid(1),$i(find)    
+                        if $g(%step) write tCSI,"C*" read x#1
+                       }
+                    if int="" do message() return
+                    }
+                }
+            }
+ #; search free unique values      
+          if 'find {
+               if $g(%step) write tCSI_"C~" read x#1
+               do show0 
+               do unique
+          }    
+        } while find
+    do show0
+    quit
+
+#; if there is an empty box and there is a valid 
+#; value that is unique in the box or the row or 
+#; the group of the box then fill it in
+unique
+#; check rows first
+   for row=1:1:9 {
+       kill found
+       set aval=box("R",row)
+       for int=1:1:9 {
+           if '$e(aval,int) continue
+           for col=1:1:9 if $$unisel() quit
+           }
+        if $d(found)>9 do unicom return
+     }
+ #; check cols next
+   for col=1:1:9 {
+       kill found
+       set aval=box("C",col)
+       for int=1:1:9 {
+           if '$e(aval,int) continue
+           for row=1:1:9 if $$unisel() quit
+           }
+        if $d(found)>9 do unicom return
+     }
+ #; finally try group check 
+   for grp=1:1:9 {
+        kill found
+        set aval=box("G",grp)
+        for int=1:1:9 {
+            if '$e(aval,int) continue
+            for g=1:1:$ll(grp(grp)) {
+                set row=$li(grp(grp),g)\1
+                    ,col=$li(grp(grp),g)*10#10
+                if $$unisel() quit
+                }
+            }
+        if $d(found)>9 do unicom return
+     }
+     quit
+           
+#; common selection
+unisel()
+   if box(row,col,2)[int {
+       if $d(found(int)) kill found(int) quit 1 
+       else  set found(int)=col/10+row
+       }
+   quit 0
+
+#; common checkout for uniqueness
+unicom
+    set int=$o(found(""),1,coo)
+        ,row=coo\1
+        ,col=coo*10#10
+    do valid(1)
+    if $i(find)
+    quit
+
+#; save actual values into .csv
+export
+    if $$filename("export to ") {
+        if csv'=0  {    ; string !!!
+            open csv:("WNS"):0 
+            if '$test write "File Error !" goto export
+        }       
+        use csv
+        for r=1:1:9 {
+            if r>1 write ! 
+            for c=1:1:9 {
+                write box(r,c),";"
+            }
+        }
+        write !
+        if csv="0" read ">>>>>>>>>>>>>>>>>>",*x 
+        else  close csv
+    }
+    use 0 
+    do show0
+    quit
+
+message(msg)
+    do exit
+    if $g(msg)="" set msg="No solution for this grid - row="_row_" col="_col_" ! "
+    write !,msg
+    read x#1,!
+    quit
+             
+#; get a file for Xport or Import    
+filename(fil)
+    do exit    ;position outside grid
+    write !,">> "_fil_"[filename, terminal=0] (sudoku.csv): " read file,!   
+    if $l(file),".,"[file quit 0
+    if file="" set csv="sudoku.csv"
+    else  set csv=file
+    write fil,$s(csv=0:"terminal",1:csv),!
+    quit 1 
+    
+#; read values from csv     
+import
+    if $$filename("import from ") {
+        if csv="0" {     ; string !!!
+            for r=1:1:9 {
+                write !,">"
+                for c=1:1:9 {
+                    read in#1
+                    set int=$s(+in:in,1:" ")
+                    if 'int write $s($l(in):$c(8)_" ",1:" ")
+                    write ";"
+                    set row=r
+                        ,col=c  
+                    do valid(1)  
+                    }
+                }
+             read !,">>>>> thanks >>>>>",x#1              
+            }
+        else {
+            open csv:("RS"):0 
+            if '$test write "File Error !" goto import
+            for r=1:1:9 {
+                use csv read line
+                for c=1:1:9 {
+                    set int=+$p(line,";",c)
+                    ,row=r
+                    ,col=c
+                    set:'int int=" "
+                    use 0 do valid(1)
+                    }
+                }
+            close csv
+            }
+        }
+    use 0
+    do show0
+    quit
+
+#; intro   
+welcome /*
+    ;; Welcome to this SUDOKU demo !
+    ;; you may solve your SUDOKU easier or create your own
+    ;; under each box entry you find a list 
+    ;; of allowed values for this box
+    ;; fill in numbers 1..9 as you need
+    ;; to clear a box enter any character or blank
+    ;; 
+    ;; navigate between boxes by cursor keys <>^v
+    ;;     simple administration commands:
+    ;;     . to stop
+    ;;     , to stop 
+    ;;     * start the solver
+    ;;     x eXport status to csv_file (0 = terminal)
+    ;;     i import status from csv_file (0 = terminal)
+    ;;     ^ write snapshot to global ^box
+    ;;     ! load snapshot from global ^box
+    ;; 
+    ;; For best viewing you require a terminal set to 48x80
+    ;;
+    */
