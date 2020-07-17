@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-  <Document name="terminal-multiline.ZPM">
+  <Document name="sudoku-en.ZPM">
     <Module>
-      <Name>terminal-multiline</Name>
-      <Version>1.0.1</Version>
-      <Description>Multi-Line in Terminal Command</Description>
+      <Name>sudoku-en</Name>
+      <Version>1.0.0</Version>
+      <Description>SUDOKU demo</Description>
       <Keywords>Terminal, COS</Keywords>
       <Packaging>module</Packaging>
       <SourcesRoot>src</SourcesRoot>
-       <Resource Name="%zml.MAC"/>
+       <Resource Name="sudoku5.MAC"/>
     </Module>
   </Document>
 </Export>
