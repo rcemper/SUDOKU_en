@@ -1,5 +1,5 @@
-ROUTINE SUDOKU5
-SUDOKU5  ; version 1.5
+ROUTINE sudoku5
+sudoku5  ; version 1.5
      write #
      for i=1:1:19 write $text(welcome+i),!
      read "go:",go#1,!
