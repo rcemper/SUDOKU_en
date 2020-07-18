@@ -8,7 +8,7 @@
       <Keywords>Terminal, COS</Keywords>
       <Packaging>module</Packaging>
       <SourcesRoot>src</SourcesRoot>
-       <Resource Name="sudoku5.MAC"/>
+       <Resource Name="SUDOKU5.MAC"/>
     </Module>
   </Document>
 </Export>
