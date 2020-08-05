@@ -22,4 +22,8 @@ USER>d ^SUDOKU
  ;; to stop enter . or ,  for the solver enter ?  
  ;; navigate between boxes by cursor keys <>^v  
  ;;  
-go:
+go:   
+- ![](https://github.com/rcemper/SUDOKU-en/blob/master/SUDOKU3.JPG)  
+
+
+[Article in DC](https://community.intersystems.com/post/sudoku-demo)	
