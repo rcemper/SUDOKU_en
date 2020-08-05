@@ -23,7 +23,7 @@ USER>d ^SUDOKU
  ;; navigate between boxes by cursor keys <>^v  
  ;;  
 go:   
-- ![](https://github.com/rcemper/SUDOKU-en/blob/master/SUDOKU3.JPG)  
+- ![](https://github.com/rcemper/SUDOKU-en/blob/master/SUDOKU3.JPG?raw=true)  
 
 
 [Article in DC](https://community.intersystems.com/post/sudoku-demo)	
