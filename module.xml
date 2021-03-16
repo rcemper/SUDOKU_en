@@ -3,8 +3,8 @@
   <Document name="sudoku-en.ZPM">
     <Module>
       <Name>sudoku-en</Name>
-      <Version>1.0.1</Version>
-      <Description>SUDOKU demo</Description>
+      <Version>1.0.4</Version>
+      <Description>SUDOKU demo - English</Description>
       <Keywords>Terminal, COS</Keywords>
       <Packaging>module</Packaging>
       <SourcesRoot>src</SourcesRoot>
