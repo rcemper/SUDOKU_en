@@ -24,4 +24,5 @@ go:
 [Demo Server SMP](https://sudoku-en.demo.community.intersystems.com/csp/sys/UtilHome.csp)   
 [Demo Server WebTerminal](https://sudoku-en.demo.community.intersystems.com/terminal/)   
        		
-**Code Quality** in SCREENSHOTS   
+**Code Quality**  
+<img width="85%" src="https://openexchange.intersystems.com/mp/img/packages/814/screenshots/tpkphe437foaclxirv5iw5qyogk.jpg">
