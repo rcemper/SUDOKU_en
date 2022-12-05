@@ -20,9 +20,3 @@ go:
 - ![](https://github.com/isc-at/SUDOKU-en/blob/master/SUDOKU3.JPG?raw=true)  
 
 [Article in DC](https://community.intersystems.com/post/sudoku-demo)	  
-
-[Demo Server SMP](https://sudoku-en.demo.community.intersystems.com/csp/sys/UtilHome.csp)   
-[Demo Server WebTerminal](https://sudoku-en.demo.community.intersystems.com/terminal/)   
-       		
-**Code Quality**  
-<img width="85%" src="https://openexchange.intersystems.com/mp/img/packages/814/screenshots/tpkphe437foaclxirv5iw5qyogk.jpg">
