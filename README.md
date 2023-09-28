@@ -6,7 +6,7 @@ It is far from being perfect. Rather a challenge for
 improvement in all directions (code, interface, ...)  
 So anyone feel invited to make it better.  
    
-USER>d ^SUDOKU5  
+IRISAPP>d ^SUDOKU5  
  ;; Welcome to this SUDOKU demo !  
  ;; you may solve your SUDOKU easier or create your own  
  ;; under each box entry you find a list  
