@@ -1,3 +1,6 @@
+<img src="https://community.intersystems.com/sites/default/files/inline/images/archived.gif" width=100></img>
+<b>&nbsp;no maintenance or update</b> 
+
 # SUDOKU
 A demo in traditional style COS  
 
@@ -17,6 +20,6 @@ IRISAPP>d ^SUDOKU5
  ;; navigate between boxes by cursor keys <>^v  
  ;;  
 go:   
-- ![](https://github.com/isc-at/SUDOKU-en/blob/master/SUDOKU3.JPG?raw=true)  
+- ![](https://github.com/rcemper/SUDOKU-en/blob/master/SUDOKU3.JPG?raw=true)  
 
 [Article in DC](https://community.intersystems.com/post/sudoku-demo)	  
