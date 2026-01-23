@@ -20,6 +20,6 @@ IRISAPP>d ^SUDOKU5
  ;; navigate between boxes by cursor keys <>^v  
  ;;  
 go:   
-- ![](https://github.com/rcemper/SUDOKU-en/blob/master/SUDOKU3.JPG?raw=true)  
+<img src="https://github.com/rcemper/SUDOKU_en/blob/master/SUDOKU3.JPG" width=400></img>    
 
 [Article in DC](https://community.intersystems.com/post/sudoku-demo)	  
